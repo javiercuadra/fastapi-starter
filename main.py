@@ -11,3 +11,7 @@ def root():
 @app.get("/greet")
 def greet(name: str = "stranger"):
     return {"message": f"Hello, {name}!"}
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}

@@ -29,3 +29,20 @@ Otherwise, after `requirements.txt` exists:
 pip install -r requirements.txt
 ```
 
+### 3) Start the server
+
+```bash
+uvicorn main:app --reload
+```
+
+This will start the server at: `http://127.0.0.1:8000`
+
+## Using the server
+
+The following endpoints are available:
+
+| Endpoint | Method | Description | Example |
+|----------|--------|-------------|---------|
+| `/` | GET | Landing route that provides usage instructions | http://127.0.0.1:8000/ |
+| `/greet?name=YourName` | GET | Returns a personalized greeting based on the `name` query parameter | http://127.0.0.1:8000/greet?name=Javi |
+| `/health` | GET | Basic status check endpoint | http://127.0.0.1:8000/health |

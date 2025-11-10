@@ -1,6 +1,10 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI()
+
+class GreetRequest(BaseModel):
+    name: str
 
 @app.get("/")
 def root():
@@ -15,3 +19,7 @@ def greet(name: str = "stranger"):
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+@app.post("/greet")
+def greet_post(request: GreetRequest):
+    return {"message": f"Hello, {request.name}!"}

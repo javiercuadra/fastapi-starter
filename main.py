@@ -29,6 +29,24 @@ def health():
 def greet_post(request: GreetRequest):
     return {"message": f"Hello, {request.name}!"}
 
+@app.get("/math")
+def math_index():
+    return {
+        "resource": "math",
+        "operations": [
+            {
+                "method": "POST",
+                "path": "/math/sum",
+                "description": "Returns the sum of a list of numbers."
+            },
+            {
+                "method": "POST",
+                "path": "/math/multiply",
+                "description": "Returns the product of a list of numbers."
+            }
+        ]
+    }
+
 @app.post("/math/sum")
 def sum_numbers(request: MathRequest):
     total = sum(request.numbers)

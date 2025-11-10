@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from models.greet_models import GreetRequest
+from app.models.greet_models import GreetRequest
 
 router = APIRouter()
 

@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from models.math_models import MathRequest
+from app.models.math_models import MathRequest
 
 router = APIRouter()
 

@@ -2,9 +2,9 @@ from fastapi import APIRouter
 
 from app.models.math_models import MathRequest
 
-router = APIRouter()
+router = APIRouter(prefix="/math")
 
-@router.get("/math")
+@router.get("/")
 def math_index():
     return {
         "resource": "math",
@@ -22,12 +22,12 @@ def math_index():
         ]
     }
 
-@router.post("/math/add")
+@router.post("/add")
 def add_numbers(request: MathRequest):
     total = sum(request.numbers)
     return {"result": total}
 
-@router.post("/math/multiply")
+@router.post("/multiply")
 def multiply_numbers(request: MathRequest):
     total = 1
     for n in request.numbers:

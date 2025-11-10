@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 
@@ -5,6 +7,9 @@ app = FastAPI()
 
 class GreetRequest(BaseModel):
     name: str
+
+class MathRequest(BaseModel):
+    numbers: List[float] = []
 
 @app.get("/")
 def root():
@@ -23,3 +28,8 @@ def health():
 @app.post("/greet")
 def greet_post(request: GreetRequest):
     return {"message": f"Hello, {request.name}!"}
+
+@app.post("/math/sum")
+def sum_numbers(request: MathRequest):
+    total = sum(request.numbers)
+    return {"result": total}

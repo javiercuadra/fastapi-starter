@@ -33,3 +33,11 @@ def greet_post(request: GreetRequest):
 def sum_numbers(request: MathRequest):
     total = sum(request.numbers)
     return {"result": total}
+
+@app.post("/math/multiply")
+def multiply_numbers(request: MathRequest):
+    total = 1
+    for n in request.numbers:
+        total *= n
+
+    return {"result": total if request.numbers else 0}

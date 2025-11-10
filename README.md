@@ -32,7 +32,7 @@ pip install -r requirements.txt
 ### 3) Start the server
 
 ```bash
-uvicorn main:app --reload
+uvicorn app.main:app --reload
 ```
 
 This will start the server at: `http://127.0.0.1:8000`
@@ -41,8 +41,12 @@ This will start the server at: `http://127.0.0.1:8000`
 
 The following endpoints are available:
 
-| Endpoint | Method | Description | Example |
-|----------|--------|-------------|---------|
-| `/` | GET | Landing route that provides usage instructions | http://127.0.0.1:8000/ |
-| `/greet?name=YourName` | GET | Returns a personalized greeting based on the `name` query parameter | http://127.0.0.1:8000/greet?name=Javi |
+| Endpoint | Method | Description | Path | Payload
+|----------|--------|-------------|---------|---------|
+| `/` | GET | Landing route that provides usage instructions | http://127.0.0.1:8000/ | None |
+| `/greet` | GET | Returns a personalized greeting based on the `name` query parameter | http://127.0.0.1:8000/greet?name=Javi | None |
+| `/greet` | POST | Returns a personalized greeting based on the `name` query parameter | http://127.0.0.1:8000/greet | {"name":"Javi"} |
+| `/math` | GET | Lists available math operations | http://127.0.0.1:8000/math | None |
+| `/math/add` | POST | Sum a list of numbers | http://127.0.0.1:8000/math | {"numbers": [1,2,3]} |
+| `/math/multiply` | POST | Multiply a list of numbers | http://127.0.0.1:8000/math | {"numbers": [1,2,3]} |
 | `/health` | GET | Basic status check endpoint | http://127.0.0.1:8000/health |

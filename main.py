@@ -36,7 +36,7 @@ def math_index():
         "operations": [
             {
                 "method": "POST",
-                "path": "/math/sum",
+                "path": "/math/add",
                 "description": "Returns the sum of a list of numbers."
             },
             {
@@ -47,8 +47,8 @@ def math_index():
         ]
     }
 
-@app.post("/math/sum")
-def sum_numbers(request: MathRequest):
+@app.post("/math/add")
+def add_numbers(request: MathRequest):
     total = sum(request.numbers)
     return {"result": total}
 

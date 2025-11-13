@@ -29,14 +29,14 @@ def test_greet_post():
     assert response.json() == {"message": "Hello, Javier!"}
 
 def test_math_add():
-    payload = {"numbers": [1,2,3,4]}
+    payload = {"numbers": [1, 2, 3, 4]}
     response = client.post("/math/add", json=payload)
 
     assert response.status_code == 200
     assert response.json() == {"result": 10}
 
 def test_math_multiply():
-    payload = {"numbers": [1,2,3,4]}
+    payload = {"numbers": [1, 2, 3, 4]}
     response = client.post("/math/multiply", json=payload)
 
     assert response.status_code == 200

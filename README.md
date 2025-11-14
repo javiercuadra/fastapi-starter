@@ -29,7 +29,21 @@ Otherwise, after `requirements.txt` exists:
 pip install -r requirements.txt
 ```
 
-### 3) Start the server
+### 3) Configure environment variables
+
+Create a `.env` file in the project root with the following variables:
+
+```
+# Required for /meds endpoint
+MEDS_API_USERNAME=your_username
+MEDS_API_PASSWORD=your_password
+GITHUB_PAT=your_github_personal_access_token
+MEDS_FILE_URL=https://api.github.com/repos/owner/repo/contents/path/to/meds.csv
+```
+
+**Note:** The `.env` file is gitignored and should never be committed to version control.
+
+### 4) Start the server
 
 ```bash
 uvicorn app.main:app --reload
@@ -41,15 +55,42 @@ This will start the server at: `http://127.0.0.1:8000`
 
 The following endpoints are available:
 
-| Endpoint | Method | Description | Path | Payload
-|----------|--------|-------------|---------|---------|
-| `/` | GET | Landing route that provides usage instructions | http://127.0.0.1:8000/ | None |
-| `/greet` | GET | Returns a personalized greeting based on the `name` query parameter | http://127.0.0.1:8000/greet?name=Javi | None |
-| `/greet` | POST | Returns a personalized greeting based on the `name` query parameter | http://127.0.0.1:8000/greet | {"name":"Javi"} |
-| `/math` | GET | Lists available math operations | http://127.0.0.1:8000/math | None |
-| `/math/add` | POST | Sum a list of numbers | http://127.0.0.1:8000/math | {"numbers": [1,2,3]} |
-| `/math/multiply` | POST | Multiply a list of numbers | http://127.0.0.1:8000/math | {"numbers": [1,2,3]} |
-| `/health` | GET | Basic status check endpoint | http://127.0.0.1:8000/health | None |
+| Endpoint | Method | Description | Path | Payload | Auth Required
+|----------|--------|-------------|---------|---------|---------------|
+| `/` | GET | Landing route that provides usage instructions | http://127.0.0.1:8000/ | None | No |
+| `/greet` | GET | Returns a personalized greeting based on the `name` query parameter | http://127.0.0.1:8000/greet?name=Javi | None | No |
+| `/greet` | POST | Returns a personalized greeting based on the `name` query parameter | http://127.0.0.1:8000/greet | {"name":"Javi"} | No |
+| `/math` | GET | Lists available math operations | http://127.0.0.1:8000/math | None | No |
+| `/math/add` | POST | Sum a list of numbers | http://127.0.0.1:8000/math/add | {"numbers": [1,2,3]} | No |
+| `/math/multiply` | POST | Multiply a list of numbers | http://127.0.0.1:8000/math/multiply | {"numbers": [1,2,3]} | No |
+| `/health` | GET | Basic status check endpoint | http://127.0.0.1:8000/health | None | No |
+| `/meds` | GET | Fetches medication data from a private GitHub repository (cached for 5 minutes) | http://127.0.0.1:8000/meds | None | Yes (HTTP Basic Auth) |
+
+### Authentication
+
+The `/meds` endpoint requires HTTP Basic Authentication. Include credentials in your requests:
+
+**Using curl:**
+```bash
+curl -u username:password http://127.0.0.1:8000/meds
+```
+
+**Using Python requests:**
+```python
+import requests
+response = requests.get('http://127.0.0.1:8000/meds', auth=('username', 'password'))
+```
+
+### Medications Endpoint Features
+
+The `/meds` endpoint includes several production-ready features:
+
+- **Authentication**: Protected by HTTP Basic Auth using credentials from environment variables
+- **Caching**: Responses are cached for 5 minutes to reduce GitHub API calls and improve performance
+- **Validation**: CSV data is validated with a configurable row limit (default: 10,000 rows) to prevent memory exhaustion
+- **Error Handling**: Proper HTTP status codes and error messages for various failure scenarios
+- **Connection Pooling**: Uses persistent HTTP client for better performance
+- **Security**: Environment variables are validated at startup for fail-fast behavior
 
 ## Testing
 
@@ -86,9 +127,12 @@ This will generate a `htmlcov` directory with detailed coverage reports.
 ### Test Coverage
 
 The test suite includes:
-- Tests for all API endpoints (root, greet, health, math operations)
+- Tests for all API endpoints (root, greet, health, math operations, meds)
 - Edge case testing (empty lists, single values, negative numbers, floats)
 - Special character handling in string inputs
+- Authentication and authorization testing for protected endpoints
+- Error handling scenarios (network errors, invalid data, missing resources)
+- Caching behavior validation
 - Comprehensive validation of response formats and status codes
 
-Current test coverage: **100%** of application code
+The `/meds` endpoint tests use mocking to avoid actual GitHub API calls during testing.

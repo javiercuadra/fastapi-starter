@@ -31,7 +31,15 @@ def get_cached_meds() -> List[Dict[str, str]]:
     
     # Cache miss or expired - fetch fresh data
     csv_text = fetch_meds_csv()
-    meds_data = parse_meds_csv(csv_text)
+    
+    try:
+        meds_data = parse_meds_csv(csv_text)
+    except ValueError as e:
+        from fastapi import HTTPException, status
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error parsing CSV data: {str(e)}"
+        )
     
     # Update cache
     _cached_data = meds_data

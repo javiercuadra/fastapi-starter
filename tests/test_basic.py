@@ -13,6 +13,7 @@ def test_root(client):
     assert "resources" in data
     assert "greet" in data["resources"]
     assert "math" in data["resources"]
+    assert "meds" in data["resources"]
 
 def test_greet_get_empty(client):
     """Test GET /greet without name parameter returns default greeting."""

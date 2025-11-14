@@ -8,6 +8,7 @@ def root():
         "message": "Welcome to my API. Refer below to the resources available.",
         "resources": {
             "greet": "/greet",
-            "math": "/math"
+            "math": "/math",
+            "meds": "/meds"
         }
     }

@@ -29,7 +29,21 @@ Otherwise, after `requirements.txt` exists:
 pip install -r requirements.txt
 ```
 
-### 3) Start the server
+### 3) Configure environment variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```bash
+# Required for /meds endpoint
+MEDS_API_USERNAME=your_username
+MEDS_API_PASSWORD=your_password
+GITHUB_PAT=your_github_personal_access_token
+MEDS_FILE_URL=https://api.github.com/repos/owner/repo/contents/path/to/meds.csv
+```
+
+**Note:** The `/meds` endpoint requires these environment variables to be set for authentication and GitHub API access.
+
+### 4) Start the server
 
 ```bash
 uvicorn app.main:app --reload
@@ -41,15 +55,16 @@ This will start the server at: `http://127.0.0.1:8000`
 
 The following endpoints are available:
 
-| Endpoint | Method | Description | Path | Payload
-|----------|--------|-------------|---------|---------|
-| `/` | GET | Landing route that provides usage instructions | http://127.0.0.1:8000/ | None |
-| `/greet` | GET | Returns a personalized greeting based on the `name` query parameter | http://127.0.0.1:8000/greet?name=Javi | None |
-| `/greet` | POST | Returns a personalized greeting based on the `name` query parameter | http://127.0.0.1:8000/greet | {"name":"Javi"} |
-| `/math` | GET | Lists available math operations | http://127.0.0.1:8000/math | None |
-| `/math/add` | POST | Sum a list of numbers | http://127.0.0.1:8000/math | {"numbers": [1,2,3]} |
-| `/math/multiply` | POST | Multiply a list of numbers | http://127.0.0.1:8000/math | {"numbers": [1,2,3]} |
-| `/health` | GET | Basic status check endpoint | http://127.0.0.1:8000/health | None |
+| Endpoint | Method | Description | Path | Payload | Auth |
+|----------|--------|-------------|---------|---------|------|
+| `/` | GET | Landing route that provides usage instructions | http://127.0.0.1:8000/ | None | None |
+| `/greet` | GET | Returns a personalized greeting based on the `name` query parameter | http://127.0.0.1:8000/greet?name=Javi | None | None |
+| `/greet` | POST | Returns a personalized greeting based on the `name` query parameter | http://127.0.0.1:8000/greet | {"name":"Javi"} | None |
+| `/math` | GET | Lists available math operations | http://127.0.0.1:8000/math | None | None |
+| `/math/add` | POST | Sum a list of numbers | http://127.0.0.1:8000/math | {"numbers": [1,2,3]} | None |
+| `/math/multiply` | POST | Multiply a list of numbers | http://127.0.0.1:8000/math | {"numbers": [1,2,3]} | None |
+| `/health` | GET | Basic status check endpoint | http://127.0.0.1:8000/health | None | None |
+| `/meds` | GET | Fetches medication data from a private GitHub repository as JSON | http://127.0.0.1:8000/meds | None | HTTP Basic Auth |
 
 ## Testing
 
@@ -86,7 +101,10 @@ This will generate a `htmlcov` directory with detailed coverage reports.
 ### Test Coverage
 
 The test suite includes:
-- Tests for all API endpoints (root, greet, health, math operations)
+- Tests for all API endpoints (root, greet, health, math operations, meds)
+- Authentication testing (valid/invalid credentials, missing auth)
+- External API integration testing (GitHub API responses)
+- CSV parsing and edge cases
 - Edge case testing (empty lists, single values, negative numbers, floats)
 - Special character handling in string inputs
 - Comprehensive validation of response formats and status codes
